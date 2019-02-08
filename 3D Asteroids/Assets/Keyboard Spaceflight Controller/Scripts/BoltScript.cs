@@ -22,6 +22,8 @@ public class BoltScript : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		Instantiate (blast,transform.position,transform.rotation);
+        if (other.tag == "Block")
+            other.GetComponent<Block>().Explode();
 		Destroy(gameObject);
 	}
 }

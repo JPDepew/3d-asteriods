@@ -23,6 +23,8 @@ public class BombScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Block")
+            other.GetComponent<Block>().Explode();
         Instantiate(blast, transform.position, transform.rotation);
         Destroy(gameObject);
     }
