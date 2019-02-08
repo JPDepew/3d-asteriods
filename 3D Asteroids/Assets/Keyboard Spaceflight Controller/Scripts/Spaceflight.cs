@@ -38,10 +38,12 @@ public class Spaceflight : MonoBehaviour {
 	//To disable stun on collide, comment out the only line in function OnCollisionEnter
 
 	private Rigidbody rb;
+    private AudioSource[] audioSources;
 
 	// Use this for initialization
 	void Start () {
 		rb = gameObject.GetComponent<Rigidbody> ();
+        audioSources = GetComponents<AudioSource>();
 	}
 		
 	void FixedUpdate () {
@@ -68,6 +70,17 @@ public class Spaceflight : MonoBehaviour {
         if (Input.GetKey(KeyCode.Space))
         {
             actualSpeed = MaxSpeed * 4;
+            if (!audioSources[3].isPlaying)
+            {
+                audioSources[3].Play();
+            }
+        }
+        else
+        {
+            if (audioSources[3].isPlaying)
+            {
+                audioSources[3].Stop();
+            }
         }
 
 

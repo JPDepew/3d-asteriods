@@ -938,6 +938,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1447091801087302, guid: 936f69c856339ba45baa583e8525d697, type: 3}
+      propertyPath: m_Name
+      value: PlayerShip
+      objectReference: {fileID: 0}
     - target: {fileID: 4438630322018174, guid: 936f69c856339ba45baa583e8525d697, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -970,23 +974,42 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114517931436186184, guid: 936f69c856339ba45baa583e8525d697,
-        type: 3}
-      propertyPath: MaxSpeed
-      value: 20
+    - target: {fileID: 4438630322018174, guid: 936f69c856339ba45baa583e8525d697, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
       objectReference: {fileID: 0}
-    - target: {fileID: 114517931436186184, guid: 936f69c856339ba45baa583e8525d697,
-        type: 3}
-      propertyPath: maxTilt
-      value: 30
+    - target: {fileID: 4438630322018174, guid: 936f69c856339ba45baa583e8525d697, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4040301451595364, guid: 936f69c856339ba45baa583e8525d697, type: 3}
+    - target: {fileID: 4438630322018174, guid: 936f69c856339ba45baa583e8525d697, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64035053482276792, guid: 936f69c856339ba45baa583e8525d697,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 57335abe8b547cb4aba0d07d9e0b0fe7,
+        type: 2}
+    - target: {fileID: 114053494249456882, guid: 936f69c856339ba45baa583e8525d697,
+        type: 3}
+      propertyPath: timeBetweenBombs
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114053494249456882, guid: 936f69c856339ba45baa583e8525d697,
+        type: 3}
+      propertyPath: timeBetweenShots
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 4231147630913320, guid: 936f69c856339ba45baa583e8525d697, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -20
+      value: 1.212
       objectReference: {fileID: 0}
-    - target: {fileID: 1519333514888632, guid: 936f69c856339ba45baa583e8525d697, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 96690762593873628, guid: 936f69c856339ba45baa583e8525d697,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.atime1
+      value: 9445
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 936f69c856339ba45baa583e8525d697, type: 3}
