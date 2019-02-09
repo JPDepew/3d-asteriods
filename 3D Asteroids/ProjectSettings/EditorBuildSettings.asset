@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Keyboard Spaceflight Controller/Scenes/Splash.unity
+    guid: b25bf36b769427f4db762ee804bfd6c5
+  - enabled: 1
+    path: Assets/Keyboard Spaceflight Controller/Scenes/Menu.unity
+    guid: eba29f336311f434dba6a8bfac5b14d7
+  - enabled: 1
+    path: Assets/Keyboard Spaceflight Controller/Scenes/Game.unity
+    guid: 6198886257dc20841bbdd9a2333b9e12
+  - enabled: 1
+    path: Assets/Keyboard Spaceflight Controller/Scenes/GameOver.unity
+    guid: 5b34e4ecbcc0ec24589c2204731b96b4
   m_configObjects: {}
