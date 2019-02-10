@@ -10,15 +10,20 @@ public class BombScript : MonoBehaviour
 
     public float lifespan = 5f;
 
+    Vector3 direction;
+
     void Start()
     {
         Destroy(gameObject, lifespan);
+        direction = (transform.forward - transform.up).normalized;
     }
 
 
-    void FixedUpdate()
+    void Update()
     {
-        transform.position += (transform.forward - transform.up).normalized * Time.fixedDeltaTime * speed;
+        direction -= transform.up * 0.05f;
+        direction.Normalize();
+        transform.position += direction * Time.deltaTime * speed;
     }
 
     void OnTriggerEnter(Collider other)

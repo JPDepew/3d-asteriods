@@ -34,8 +34,9 @@ public class Spaceflight : MonoBehaviour {
 
 	//Fighter also loses mobility for a few seconds after a collision. Specifically, its apparent maxAccelaration and maxAngularAcceleration are reduced.
 	internal float stunned = 0f; //1f means thrust and turn disabled completely, like after collisions. 0f means no reduction.
-	//0.5f would means acceleration is at exactly half power at the moment. See the STUN CODE in FixedUpdate for details on duration
-	//To disable stun on collide, comment out the only line in function OnCollisionEnter
+                                 //0.5f would means acceleration is at exactly half power at the moment. See the STUN CODE in FixedUpdate for details on duration
+                                 //To disable stun on collide, comment out the only line in function OnCollisionEnter
+    bool speeding = false;
 
 	private Rigidbody rb;
     private AudioSource[] audioSources;
@@ -69,6 +70,11 @@ public class Spaceflight : MonoBehaviour {
         float actualSpeed = MaxSpeed;
         if (Input.GetKey(KeyCode.Space))
         {
+            if (!speeding)
+            {
+                audioSources[4].Play();
+            }
+            speeding = true;
             actualSpeed = MaxSpeed * 4;
             if (!audioSources[3].isPlaying)
             {
@@ -77,6 +83,7 @@ public class Spaceflight : MonoBehaviour {
         }
         else
         {
+            speeding = false;
             if (audioSources[3].isPlaying)
             {
                 audioSources[3].Stop();
