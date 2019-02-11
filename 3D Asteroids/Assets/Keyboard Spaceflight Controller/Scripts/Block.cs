@@ -5,7 +5,6 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     public GameObject explosion;
-    public float speed = 20;
     public bool canExplode = true;
     public bool targetBlock = false;
 
