@@ -30,6 +30,10 @@ public class BombScript : MonoBehaviour
     {
         if (other.tag == "Block")
             other.GetComponent<Block>().Explode();
+        if (other.tag == "Asteroid")
+        {
+            other.GetComponent<Asteroid>().Explode();
+        }
         Instantiate(blast, transform.position, transform.rotation);
         Destroy(gameObject);
     }

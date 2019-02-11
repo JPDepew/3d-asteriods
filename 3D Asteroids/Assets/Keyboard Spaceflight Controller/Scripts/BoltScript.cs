@@ -24,6 +24,11 @@ public class BoltScript : MonoBehaviour {
 		Instantiate (blast,transform.position,transform.rotation);
         if (other.tag == "Block")
             other.GetComponent<Block>().Explode();
-		Destroy(gameObject);
+        if (other.tag == "Asteroid")
+        {
+            Debug.Log("Asteroid");
+            other.GetComponent<Asteroid>().Explode();
+        }
+        Destroy(gameObject);
 	}
 }
