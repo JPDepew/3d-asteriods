@@ -6,6 +6,10 @@ public class BadShip : MonoBehaviour
 {
     public GameObject ps1;
     public GameObject ps2;
+    public GameObject asteroid;
+    public Transform shootPos;
+
+    public float waitBetweenShots = 5;
 
     AudioSource audioSource;
 
@@ -13,11 +17,19 @@ public class BadShip : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         Block.onTargetExplode += ShipHasExploded;
+
+        StartCoroutine(ShootAsteroids());
+    }
+
+    private void OnDestroy()
+    {
+        Block.onTargetExplode -= ShipHasExploded;
     }
 
     void ShipHasExploded()
     {
         StartCoroutine(ExplodeShip());
+        Block.onTargetExplode -= ShipHasExploded;
     }
 
     IEnumerator ExplodeShip()
@@ -28,5 +40,23 @@ public class BadShip : MonoBehaviour
         ps1.SetActive(true);
         yield return new WaitForSeconds(0.8f);
         ps2.SetActive(true);
+        Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
+        for(int i = 0; i < asteroids.Length; i++)
+        {
+            Destroy(asteroids[i].gameObject);
+            yield return null;
+        }
+        yield return new WaitForSeconds(15f);
+        Destroy(gameObject);
+    }
+
+    IEnumerator ShootAsteroids()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(waitBetweenShots);
+            asteroid = Instantiate(asteroid, shootPos.position, asteroid.transform.rotation);
+            asteroid.GetComponent<Asteroid>().direction = Vector3.up;
+        }
     }
 }

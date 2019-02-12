@@ -8,7 +8,10 @@ public class Asteroid : MonoBehaviour
     public float speed = 15;
     public GameObject explosion;
     public GameObject[] otherAsteroids;
+
+    Vector3 rotationSpeed;
     Transform player;
+    AudioSource[] audioSources;
     enum AsteroidClass { BIG, MEDIUM, SMALL }
     [SerializeField]
     AsteroidClass asteroidClass;
@@ -16,7 +19,9 @@ public class Asteroid : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSources = GetComponents<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        rotationSpeed = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
     }
 
     void Update()
@@ -24,13 +29,16 @@ public class Asteroid : MonoBehaviour
         Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
         direction += directionToPlayer * 0.01f;
         direction.Normalize();
-        transform.Translate(direction * speed * Time.deltaTime);
+        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+
+        transform.Rotate(rotationSpeed);
     }
 
     public void Explode()
     {
         int index = 0;
         float speedToApply = 40;
+
         if (asteroidClass == AsteroidClass.BIG)
         {
             index = Random.Range(2, 4);
@@ -49,6 +57,7 @@ public class Asteroid : MonoBehaviour
             tempAsteroid2.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
             tempAsteroid2.speed = speedToApply;
         }
+        Instantiate(explosion, transform.position, transform.rotation);
         Destroy(gameObject);
     }
 }

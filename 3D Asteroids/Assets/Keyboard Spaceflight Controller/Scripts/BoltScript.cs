@@ -26,7 +26,6 @@ public class BoltScript : MonoBehaviour {
             other.GetComponent<Block>().Explode();
         if (other.tag == "Asteroid")
         {
-            Debug.Log("Asteroid");
             other.GetComponent<Asteroid>().Explode();
         }
         Destroy(gameObject);
