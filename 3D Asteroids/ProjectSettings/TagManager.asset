@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Block
   - Asteroid
+  - BadShip
   layers:
   - Default
   - TransparentFX

@@ -47,16 +47,16 @@ public class Spaceflight : MonoBehaviour {
         audioSources = GetComponents<AudioSource>();
 	}
 		
-	void FixedUpdate () {
+	void Update () {
 
 		//STUN CODE
 		//At any moment, if stunned is greater than zero, ship mobility is reduced. This code handles the decay of that variable to zero.
 		if (stunned > 1f)
 			stunned = 1f; //Stun is never above 1.
 		else if (stunned > 0.85f)
-			stunned -= Time.fixedDeltaTime * 0.05f; //3 seconds nearly completely disabled (decaying from 1.0f to 0.85f)
+			stunned -= Time.deltaTime * 0.05f; //3 seconds nearly completely disabled (decaying from 1.0f to 0.85f)
 		else if (stunned > 0f)
-			stunned -= Time.fixedDeltaTime * 0.5f; //2 more seconds, only marginally slowed (decaying from 0.85f to 0f)
+			stunned -= Time.deltaTime * 0.5f; //2 more seconds, only marginally slowed (decaying from 0.85f to 0f)
 		else
 			stunned = 0f; //Stun is never lower than zero.
 
@@ -110,7 +110,7 @@ public class Spaceflight : MonoBehaviour {
 		Vector3 avdiff = -1 * (TurnFactor * (transform.forward * ControlHorizontal + transform.right * ControlVertical) + rb.angularVelocity); //Difference between current angular velocity and intended.
         float mag = avdiff.magnitude;
 		avdiff.Normalize (); //avdiff is now avDIRECTION. Magnitude is 1.
-		rb.AddTorque (avdiff * Mathf.Clamp (mag, 0, MaxAngularAcceleration * Time.fixedDeltaTime  * (1f - stunned)), ForceMode.VelocityChange);
+		rb.AddTorque (avdiff * Mathf.Clamp (mag, 0, MaxAngularAcceleration * Time.deltaTime * (1f - stunned)), ForceMode.VelocityChange);
 
 		//YAW CODE.
 		//Visually tilts the hull left and right when turning those directions. Absolutely no effect on overall motion.

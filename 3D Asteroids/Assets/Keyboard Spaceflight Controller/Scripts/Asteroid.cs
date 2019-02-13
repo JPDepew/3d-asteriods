@@ -10,22 +10,45 @@ public class Asteroid : MonoBehaviour
     public GameObject[] otherAsteroids;
 
     Vector3 rotationSpeed;
+    Transform badShip;
     Transform player;
     AudioSource[] audioSources;
-    enum AsteroidClass { BIG, MEDIUM, SMALL }
+    public enum AsteroidClass { BIG, MEDIUM, SMALL }
     [SerializeField]
     AsteroidClass asteroidClass;
+    bool destroyed = false;
 
-    // Start is called before the first frame update
+    public delegate void OnAsteroidExplode(AsteroidClass asteroidClass);
+    public static event OnAsteroidExplode onAsteroidExplode;
+
     void Start()
     {
         audioSources = GetComponents<AudioSource>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject tempPlayer = GameObject.FindGameObjectWithTag("Player");
+        if (tempPlayer != null)
+        {
+            player = tempPlayer.transform;
+        }
+        GameObject tempBadShip = GameObject.FindGameObjectWithTag("BadShip");
+        if(tempBadShip != null)
+        {
+            badShip = tempBadShip.transform;
+        }
+
         rotationSpeed = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
     }
 
-    void Update()
+    void LateUpdate()
     {
+        if (badShip != null)
+        {
+            Vector3 directionToBadShip = badShip.transform.position - transform.position;
+            if (directionToBadShip.magnitude < 150)
+            {
+                direction -= directionToBadShip.normalized * 0.02f;
+            }
+        }
+
         Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
         direction += directionToPlayer * 0.01f;
         direction.Normalize();
@@ -41,6 +64,10 @@ public class Asteroid : MonoBehaviour
 
         if (asteroidClass == AsteroidClass.BIG)
         {
+            if(onAsteroidExplode != null)
+            {
+                onAsteroidExplode(AsteroidClass.BIG);
+            }
             index = Random.Range(2, 4);
         }
         else if (asteroidClass == AsteroidClass.MEDIUM)
@@ -59,5 +86,15 @@ public class Asteroid : MonoBehaviour
         }
         Instantiate(explosion, transform.position, transform.rotation);
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Block" && !destroyed)
+        {
+            destroyed = true;
+            other.GetComponent<Block>().Explode();
+            Explode();
+        }
     }
 }

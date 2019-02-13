@@ -9,13 +9,20 @@ public class BadShip : MonoBehaviour
     public GameObject asteroid;
     public Transform shootPos;
 
+    public int maxAsteroids = 10;
+
     public float waitBetweenShots = 5;
 
     AudioSource audioSource;
 
+    int currentAsteroidsCount = 0;
+    bool dead = false;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+
+        Asteroid.onAsteroidExplode += AsteroidHasBeenDestroyed;
         Block.onTargetExplode += ShipHasExploded;
 
         StartCoroutine(ShootAsteroids());
@@ -23,7 +30,16 @@ public class BadShip : MonoBehaviour
 
     private void OnDestroy()
     {
+        Asteroid.onAsteroidExplode -= AsteroidHasBeenDestroyed;
         Block.onTargetExplode -= ShipHasExploded;
+    }
+
+    void AsteroidHasBeenDestroyed(Asteroid.AsteroidClass asteroidClass)
+    {
+        if(asteroidClass == Asteroid.AsteroidClass.BIG)
+        {
+            currentAsteroidsCount--;
+        }
     }
 
     void ShipHasExploded()
@@ -34,6 +50,7 @@ public class BadShip : MonoBehaviour
 
     IEnumerator ExplodeShip()
     {
+        dead = true;
         yield return new WaitForSeconds(4.7f);
         audioSource.Play();
         yield return new WaitForSeconds(0.3f);
@@ -41,7 +58,7 @@ public class BadShip : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         ps2.SetActive(true);
         Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
-        for(int i = 0; i < asteroids.Length; i++)
+        for (int i = 0; i < asteroids.Length; i++)
         {
             Destroy(asteroids[i].gameObject);
             yield return null;
@@ -52,11 +69,15 @@ public class BadShip : MonoBehaviour
 
     IEnumerator ShootAsteroids()
     {
-        while (true)
+        while (!dead)
         {
             yield return new WaitForSeconds(waitBetweenShots);
-            asteroid = Instantiate(asteroid, shootPos.position, asteroid.transform.rotation);
-            asteroid.GetComponent<Asteroid>().direction = Vector3.up;
+            if (currentAsteroidsCount < maxAsteroids)
+            {
+                currentAsteroidsCount++;
+                GameObject tempAsteroid = Instantiate(asteroid, shootPos.position, asteroid.transform.rotation);
+                tempAsteroid.GetComponent<Asteroid>().direction = Vector3.up;
+            }
         }
     }
 }
