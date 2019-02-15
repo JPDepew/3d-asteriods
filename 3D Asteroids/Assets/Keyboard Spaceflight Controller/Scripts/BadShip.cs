@@ -18,6 +18,9 @@ public class BadShip : MonoBehaviour
     int currentAsteroidsCount = 0;
     bool dead = false;
 
+    public delegate void OnBadShipExplode();
+    public static event OnBadShipExplode onBadShipExplode;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -36,7 +39,15 @@ public class BadShip : MonoBehaviour
 
     void AsteroidHasBeenDestroyed(Asteroid.AsteroidClass asteroidClass)
     {
-        if(asteroidClass == Asteroid.AsteroidClass.BIG)
+        if (asteroidClass == Asteroid.AsteroidClass.BIG)
+        {
+            currentAsteroidsCount++;
+        }
+        else if(asteroidClass == Asteroid.AsteroidClass.MEDIUM)
+        {
+            currentAsteroidsCount++;
+        }
+        else if(asteroidClass == Asteroid.AsteroidClass.SMALL)
         {
             currentAsteroidsCount--;
         }
@@ -63,6 +74,7 @@ public class BadShip : MonoBehaviour
             Destroy(asteroids[i].gameObject);
             yield return null;
         }
+        onBadShipExplode?.Invoke();
         yield return new WaitForSeconds(15f);
         Destroy(gameObject);
     }
@@ -72,6 +84,7 @@ public class BadShip : MonoBehaviour
         while (!dead)
         {
             yield return new WaitForSeconds(waitBetweenShots);
+            
             if (currentAsteroidsCount < maxAsteroids)
             {
                 currentAsteroidsCount++;

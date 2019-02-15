@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 901483777262487532}
   - component: {fileID: 901483777262487536}
   - component: {fileID: 5142406871643737509}
+  - component: {fileID: 1945955851}
   m_Layer: 0
   m_Name: Asteroid_01_S
   m_TagString: Asteroid
@@ -150,7 +151,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 80
+  Priority: 120
   DopplerLevel: 1
   MinDistance: 30
   MaxDistance: 500
@@ -228,3 +229,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!136 &1945955851
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901483778165584981}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.12
+  m_Height: 0.56
+  m_Direction: 1
+  m_Center: {x: -0.018522054, y: 0.038490787, z: -0.004260607}

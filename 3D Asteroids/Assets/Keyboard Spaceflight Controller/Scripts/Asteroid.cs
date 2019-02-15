@@ -30,7 +30,7 @@ public class Asteroid : MonoBehaviour
             player = tempPlayer.transform;
         }
         GameObject tempBadShip = GameObject.FindGameObjectWithTag("BadShip");
-        if(tempBadShip != null)
+        if (tempBadShip != null)
         {
             badShip = tempBadShip.transform;
         }
@@ -49,8 +49,11 @@ public class Asteroid : MonoBehaviour
             }
         }
 
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-        direction += directionToPlayer * 0.01f;
+        if (player != null)
+        {
+            Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+            direction += directionToPlayer * 0.01f;
+        }
         direction.Normalize();
         transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
@@ -59,41 +62,42 @@ public class Asteroid : MonoBehaviour
 
     public void Explode()
     {
-        int index = 0;
-        float speedToApply = 40;
+        if (!destroyed)
+        {
+            destroyed = true;
+            int index = 0;
+            float speedToApply = 40;
 
-        if (asteroidClass == AsteroidClass.BIG)
-        {
-            if(onAsteroidExplode != null)
+            // This is to keep track of the # of asteroids in a scene
+            onAsteroidExplode?.Invoke(asteroidClass);
+            if (asteroidClass == AsteroidClass.BIG)
             {
-                onAsteroidExplode(AsteroidClass.BIG);
+                index = Random.Range(2, 4);
             }
-            index = Random.Range(2, 4);
+            else if (asteroidClass == AsteroidClass.MEDIUM)
+            {
+                speedToApply = 60;
+                index = Random.Range(0, 2);
+            }
+            if (asteroidClass != AsteroidClass.SMALL)
+            {
+                Asteroid tempAsteroid1 = Instantiate(otherAsteroids[index], transform.position, transform.rotation).GetComponent<Asteroid>();
+                tempAsteroid1.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                tempAsteroid1.speed = speedToApply;
+                Asteroid tempAsteroid2 = Instantiate(otherAsteroids[index], transform.position, transform.rotation).GetComponent<Asteroid>();
+                tempAsteroid2.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                tempAsteroid2.speed = speedToApply;
+            }
+            Instantiate(explosion, transform.position, transform.rotation);
+            Destroy(gameObject);
         }
-        else if (asteroidClass == AsteroidClass.MEDIUM)
-        {
-            speedToApply = 60;
-            index = Random.Range(0, 2);
-        }
-        if (asteroidClass != AsteroidClass.SMALL)
-        {
-            Asteroid tempAsteroid1 = Instantiate(otherAsteroids[index], transform.position, transform.rotation).GetComponent<Asteroid>();
-            tempAsteroid1.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-            tempAsteroid1.speed = speedToApply;
-            Asteroid tempAsteroid2 = Instantiate(otherAsteroids[index], transform.position, transform.rotation).GetComponent<Asteroid>();
-            tempAsteroid2.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-            tempAsteroid2.speed = speedToApply;
-        }
-        Instantiate(explosion, transform.position, transform.rotation);
-        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Block" && !destroyed)
+        if (other.tag == "Block")
         {
-            destroyed = true;
-            other.GetComponent<Block>().Explode();
+            other.GetComponent<Block>()?.Explode();
             Explode();
         }
     }
