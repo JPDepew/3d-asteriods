@@ -128,8 +128,7 @@ public class Spaceflight : MonoBehaviour
     {
         if (other.tag == "Block")
         {
-            other.GetComponent<Block>().Explode();
-            onExplode?.Invoke();
+            other.GetComponent<Block>().Explode(true);
             DestroySelf();
         }
     }
@@ -139,7 +138,11 @@ public class Spaceflight : MonoBehaviour
         if(collision.collider.tag == "Asteroid")
         {
             collision.gameObject.GetComponent<Asteroid>().Explode();
-            onExplode?.Invoke();
+            DestroySelf();
+        }
+        if(collision.collider.tag == "Block" || collision.collider.tag == "BadShip")
+        {
+            collision.gameObject.GetComponent<Block>().Explode(true);
             DestroySelf();
         }
     }
@@ -148,6 +151,7 @@ public class Spaceflight : MonoBehaviour
     {
         Camera.main.transform.parent = null;
         Instantiate(explosion, transform.position, transform.rotation);
+        onExplode?.Invoke();
         Destroy(gameObject);
     }
 

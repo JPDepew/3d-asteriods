@@ -18,7 +18,7 @@ public class Block : MonoBehaviour
         onTargetExplode += ShipExplode;
     }
 
-    public void Explode()
+    public void Explode(bool shouldEmitParticles)
     {
         if (canExplode)
         {
@@ -31,7 +31,7 @@ public class Block : MonoBehaviour
             {
                 shouldExplode = Random.Range(0, 7);
             }
-            if (shouldExplode == 1)
+            if (shouldExplode == 1 && shouldEmitParticles)
             {
                 Instantiate(explosion, transform.position, transform.rotation);
             }
@@ -57,6 +57,6 @@ public class Block : MonoBehaviour
         yield return new WaitForSeconds(actualWait);
         canExplode = true;
         allExplode = false;
-        Explode();
+        Explode(true);
     }
 }

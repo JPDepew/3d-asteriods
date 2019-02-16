@@ -13,7 +13,7 @@ public class BadShip : MonoBehaviour
 
     public float waitBetweenShots = 5;
 
-    AudioSource audioSource;
+    AudioSource[] audioSource;
 
     int currentAsteroidsCount = 0;
     bool dead = false;
@@ -23,7 +23,7 @@ public class BadShip : MonoBehaviour
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponents<AudioSource>();
 
         Asteroid.onAsteroidExplode += AsteroidHasBeenDestroyed;
         Block.onTargetExplode += ShipHasExploded;
@@ -63,11 +63,13 @@ public class BadShip : MonoBehaviour
     {
         dead = true;
         yield return new WaitForSeconds(4.7f);
-        audioSource.Play();
+        audioSource[1].Stop();
+        audioSource[0].Play();
         yield return new WaitForSeconds(0.3f);
         ps1.SetActive(true);
         yield return new WaitForSeconds(0.8f);
         ps2.SetActive(true);
+
         Asteroid[] asteroids = FindObjectsOfType<Asteroid>();
         for (int i = 0; i < asteroids.Length; i++)
         {

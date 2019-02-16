@@ -422,7 +422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3a6019301d0c764eafa7a8a73fe5541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  badShip: {fileID: 6286254848700392477, guid: ebf754261f13cc541ad5acf85121864c, type: 3}
+  badShip: {fileID: 3840681429649537661, guid: ebf754261f13cc541ad5acf85121864c, type: 3}
   playerShip: {fileID: 1447091801087302, guid: 936f69c856339ba45baa583e8525d697, type: 3}
 --- !u!4 &1871306877
 Transform:

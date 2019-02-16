@@ -97,7 +97,7 @@ public class Asteroid : MonoBehaviour
     {
         if (other.tag == "Block")
         {
-            other.GetComponent<Block>()?.Explode();
+            other.GetComponent<Block>()?.Explode(false);
             Explode();
         }
     }

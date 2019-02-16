@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameMaster : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class GameMaster : MonoBehaviour
     void Start()
     {
         BadShip.onBadShipExplode += OnBadShipExplode;
+        Spaceflight.onExplode += OnShipExplode;
 
         StartGame();
     }
@@ -25,6 +27,17 @@ public class GameMaster : MonoBehaviour
     {
         playerRef = Instantiate(playerShip, transform.position, playerShip.transform.rotation);
         Instantiate(badShip, playerShip.transform.position + new Vector3(300, -50, 300), transform.rotation);
+    }
+
+    void OnShipExplode()
+    {
+        StartCoroutine(OnShipExplodeWait());
+    }
+
+    IEnumerator OnShipExplodeWait()
+    {
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     void OnBadShipExplode()
@@ -41,5 +54,6 @@ public class GameMaster : MonoBehaviour
     private void OnDestroy()
     {
         BadShip.onBadShipExplode -= OnBadShipExplode;
+        Spaceflight.onExplode -= OnShipExplode;
     }
 }

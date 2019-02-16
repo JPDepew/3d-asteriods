@@ -29,7 +29,7 @@ public class BombScript : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Block")
-            other.GetComponent<Block>().Explode();
+            other.GetComponent<Block>().Explode(true);
         if (other.tag == "Asteroid")
         {
             other.GetComponent<Asteroid>().Explode();

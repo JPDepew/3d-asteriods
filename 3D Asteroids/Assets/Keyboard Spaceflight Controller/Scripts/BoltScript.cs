@@ -23,7 +23,7 @@ public class BoltScript : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		Instantiate (blast,transform.position,transform.rotation);
         if (other.tag == "Block")
-            other.GetComponent<Block>().Explode();
+            other.GetComponent<Block>().Explode(true);
         if (other.tag == "Asteroid")
         {
             other.GetComponent<Asteroid>().Explode();
