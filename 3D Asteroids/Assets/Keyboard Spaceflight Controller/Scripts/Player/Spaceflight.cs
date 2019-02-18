@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Spaceflight : MonoBehaviour
 {
-
-
     public Transform hull; //A reference to the entire ship's hull (must be nested inside PlayerShip object) to be titled left and right locally as the ship turns.
     public float maxTilt = 20f; //Maximum tilt of above behavior (turning to the right, the hull will yaw X degrees to the right). Set zero to remove behavior.
     public GameObject explosion;
+    public ParticleSystem engineBoost;
 
     //This script causes the ship to try to fly forward at a target speed, using a max linear acceleration to change velocity when turning,
     //recovering from a collision, or speeding up. It also tries to recover from spinouts, and do regular turning,
@@ -39,6 +38,7 @@ public class Spaceflight : MonoBehaviour
                                  //0.5f would means acceleration is at exactly half power at the moment. See the STUN CODE in FixedUpdate for details on duration
                                  //To disable stun on collide, comment out the only line in function OnCollisionEnter
     bool speeding = false;
+    bool dead = false;
 
     private Rigidbody rb;
     private AudioSource[] audioSources;
@@ -55,7 +55,6 @@ public class Spaceflight : MonoBehaviour
 
     void Update()
     {
-
         //STUN CODE
         //At any moment, if stunned is greater than zero, ship mobility is reduced. This code handles the decay of that variable to zero.
         if (stunned > 1f)
@@ -66,8 +65,6 @@ public class Spaceflight : MonoBehaviour
             stunned -= Time.deltaTime * 0.5f; //2 more seconds, only marginally slowed (decaying from 0.85f to 0f)
         else
             stunned = 0f; //Stun is never lower than zero.
-
-
 
         //IF PLAYER
         ControlHorizontal = Input.GetAxis("Horizontal");
@@ -83,6 +80,10 @@ public class Spaceflight : MonoBehaviour
             }
             speeding = true;
             actualSpeed = MaxSpeed * 4;
+            if (!engineBoost.isPlaying)
+            {
+                engineBoost.Play();
+            }
             if (!audioSources[3].isPlaying)
             {
                 audioSources[3].Play();
@@ -94,6 +95,10 @@ public class Spaceflight : MonoBehaviour
             if (audioSources[3].isPlaying)
             {
                 audioSources[3].Stop();
+            }
+            if (!engineBoost.isStopped)
+            {
+                engineBoost.Stop();
             }
         }
 
@@ -135,12 +140,12 @@ public class Spaceflight : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "Asteroid")
+        if (collision.collider.tag == "Asteroid")
         {
             collision.gameObject.GetComponent<Asteroid>().Explode();
             DestroySelf();
         }
-        if(collision.collider.tag == "Block" || collision.collider.tag == "BadShip")
+        if (collision.collider.tag == "Block" || collision.collider.tag == "BadShip")
         {
             collision.gameObject.GetComponent<Block>().Explode(true);
             DestroySelf();
@@ -149,10 +154,14 @@ public class Spaceflight : MonoBehaviour
 
     void DestroySelf()
     {
-        Camera.main.transform.parent = null;
-        Instantiate(explosion, transform.position, transform.rotation);
-        onExplode?.Invoke();
-        Destroy(gameObject);
+        if (!dead)
+        {
+            dead = true;
+            Camera.main.transform.parent = null;
+            Instantiate(explosion, transform.position, transform.rotation);
+            onExplode?.Invoke();
+            Destroy(gameObject);
+        }
     }
 
     void OnCollisionEnter()

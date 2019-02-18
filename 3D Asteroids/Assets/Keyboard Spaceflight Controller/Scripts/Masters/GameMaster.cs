@@ -42,6 +42,7 @@ public class GameMaster : MonoBehaviour
 
     void OnBadShipExplode()
     {
+        Data.Instance.score++;
         StartCoroutine(InstantiateShipDelay());
     }
 
