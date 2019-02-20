@@ -43,11 +43,11 @@ public class BadShip : MonoBehaviour
         {
             currentAsteroidsCount++;
         }
-        else if(asteroidClass == Asteroid.AsteroidClass.MEDIUM)
+        else if (asteroidClass == Asteroid.AsteroidClass.MEDIUM)
         {
             currentAsteroidsCount++;
         }
-        else if(asteroidClass == Asteroid.AsteroidClass.SMALL)
+        else if (asteroidClass == Asteroid.AsteroidClass.SMALL)
         {
             currentAsteroidsCount--;
         }
@@ -86,7 +86,6 @@ public class BadShip : MonoBehaviour
         while (!dead)
         {
             yield return new WaitForSeconds(waitBetweenShots);
-            
             if (currentAsteroidsCount < maxAsteroids)
             {
                 currentAsteroidsCount++;

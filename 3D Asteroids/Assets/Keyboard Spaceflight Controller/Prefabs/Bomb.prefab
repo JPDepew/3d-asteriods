@@ -4778,7 +4778,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 30
   blast: {fileID: 1141341299323724, guid: 98193aacfa2fc78418bc7c9f4d0f110a, type: 3}
-  lifespan: 5
+  lifespan: 4
 --- !u!1 &1123927435462042
 GameObject:
   m_ObjectHideFlags: 0

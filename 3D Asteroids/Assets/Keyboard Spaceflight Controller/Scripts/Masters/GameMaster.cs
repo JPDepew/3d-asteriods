@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour
 {
     public BadShip badShip;
     public GameObject playerShip;
+    public Text exitText;
 
     GameObject playerRef;
 
@@ -14,6 +16,8 @@ public class GameMaster : MonoBehaviour
     int currentMaxForBadShip = 0;
     int currentCountForBadShip = 0;
 
+    public enum GameState { RUNNING, PAUSED };
+    public GameState gameState;
 
     void Start()
     {
@@ -23,10 +27,44 @@ public class GameMaster : MonoBehaviour
         StartGame();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (gameState == GameState.RUNNING)
+            {
+                exitText.gameObject.SetActive(true);
+                gameState = GameState.PAUSED;
+                Time.timeScale = 0;
+                AudioListener.volume = 0;
+            }
+            else
+            {
+                exitText.gameObject.SetActive(false);
+                gameState = GameState.RUNNING;
+                Time.timeScale = 1;
+                AudioListener.volume = 1;
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.N) && gameState == GameState.PAUSED)
+        {
+            exitText.gameObject.SetActive(false);
+            gameState = GameState.RUNNING;
+            Time.timeScale = 1;
+            AudioListener.volume = 1;
+        }
+        if(Input.GetKeyDown(KeyCode.Y) && gameState == GameState.PAUSED)
+        {
+            AudioListener.volume = 1;
+            Time.timeScale = 1;
+            SceneManager.LoadScene(1);
+        }
+    }
+
     void StartGame()
     {
         playerRef = Instantiate(playerShip, transform.position, playerShip.transform.rotation);
-        Instantiate(badShip, playerShip.transform.position + new Vector3(300, -50, 300), transform.rotation);
+        Instantiate(badShip, playerShip.transform.position + new Vector3(600, -50, 300), transform.rotation);
     }
 
     void OnShipExplode()
@@ -49,7 +87,7 @@ public class GameMaster : MonoBehaviour
     IEnumerator InstantiateShipDelay()
     {
         yield return new WaitForSeconds(5);
-        Instantiate(badShip, playerRef.transform.position + 600 * playerRef.transform.right, transform.rotation);
+        Instantiate(badShip, playerRef.transform.position + 1000 * playerRef.transform.right, transform.rotation);
     }
 
     private void OnDestroy()

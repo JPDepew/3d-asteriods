@@ -55,78 +55,81 @@ public class Spaceflight : MonoBehaviour
 
     void Update()
     {
-        //STUN CODE
-        //At any moment, if stunned is greater than zero, ship mobility is reduced. This code handles the decay of that variable to zero.
-        if (stunned > 1f)
-            stunned = 1f; //Stun is never above 1.
-        else if (stunned > 0.85f)
-            stunned -= Time.deltaTime * 0.05f; //3 seconds nearly completely disabled (decaying from 1.0f to 0.85f)
-        else if (stunned > 0f)
-            stunned -= Time.deltaTime * 0.5f; //2 more seconds, only marginally slowed (decaying from 0.85f to 0f)
-        else
-            stunned = 0f; //Stun is never lower than zero.
-
-        //IF PLAYER
-        ControlHorizontal = Input.GetAxis("Horizontal");
-        ControlVertical = Input.GetAxis("Vertical");
-        //ELSE ASSIGN VIA AI
-
-        float actualSpeed = MaxSpeed;
-        if (Input.GetKey(KeyCode.Space))
+        if (Time.timeScale > 0)
         {
-            if (!speeding)
+            //STUN CODE
+            //At any moment, if stunned is greater than zero, ship mobility is reduced. This code handles the decay of that variable to zero.
+            if (stunned > 1f)
+                stunned = 1f; //Stun is never above 1.
+            else if (stunned > 0.85f)
+                stunned -= Time.deltaTime * 0.05f; //3 seconds nearly completely disabled (decaying from 1.0f to 0.85f)
+            else if (stunned > 0f)
+                stunned -= Time.deltaTime * 0.5f; //2 more seconds, only marginally slowed (decaying from 0.85f to 0f)
+            else
+                stunned = 0f; //Stun is never lower than zero.
+
+            //IF PLAYER
+            ControlHorizontal = Input.GetAxis("Horizontal");
+            ControlVertical = Input.GetAxis("Vertical");
+            //ELSE ASSIGN VIA AI
+
+            float actualSpeed = MaxSpeed;
+            if (Input.GetKey(KeyCode.Space))
             {
-                audioSources[4].Play();
+                if (!speeding)
+                {
+                    audioSources[4].Play();
+                }
+                speeding = true;
+                actualSpeed = MaxSpeed * 4;
+                if (!engineBoost.isPlaying)
+                {
+                    engineBoost.Play();
+                }
+                if (!audioSources[3].isPlaying)
+                {
+                    audioSources[3].Play();
+                }
             }
-            speeding = true;
-            actualSpeed = MaxSpeed * 4;
-            if (!engineBoost.isPlaying)
+            else
             {
-                engineBoost.Play();
+                speeding = false;
+                if (audioSources[3].isPlaying)
+                {
+                    audioSources[3].Stop();
+                }
+                if (!engineBoost.isStopped)
+                {
+                    engineBoost.Stop();
+                }
             }
-            if (!audioSources[3].isPlaying)
-            {
-                audioSources[3].Play();
-            }
+
+
+            //ACCELERATION CODE.
+            //To those familiar with vector math, accelaration simply follows the direction of (desired velocity minus current)
+            //and is capped at a magnitude of MaxAcceleration.
+            //So, acceleration can be in any direction and is not necessarily forward as the engine flames might imply.
+            //For example, when turning right, acceleration is purely to the right (centripetal acceleration - nothing to do with the ship rotating, which is in the next code group)
+            Vector3 vDiff = transform.up * actualSpeed * ControlThrust - rb.velocity; //Difference between current velocity and intended velocity.
+            if (vDiff.magnitude > MaxAcceleration * (1f - stunned))
+                vDiff *= MaxAcceleration * (1f - stunned) / vDiff.magnitude;
+            rb.AddForce(vDiff, ForceMode.VelocityChange);
+
+            //TURNING CODE.
+            //Note on the math here: Turn speed (target/intended angular velocity) is "TurnFactor" radians per second.
+            //The code below calculates the needed angular acceleration needed to reach that turning speed, then applies
+            //angular acceleration in that direction, capped at max angular acceleration.
+            //Generally, max angular acceleration is more than sufficient to reach the desired turn speed instantly, so TurnFactor is the limiting factor.
+            //MaxAngularAcceleration is, however, the limiting factor in spinout correction, especially when working at reduced power due to stun.
+            Vector3 avdiff = -1 * (TurnFactor * (transform.forward * ControlHorizontal + transform.right * ControlVertical) + rb.angularVelocity); //Difference between current angular velocity and intended.
+            float mag = avdiff.magnitude;
+            avdiff.Normalize(); //avdiff is now avDIRECTION. Magnitude is 1.
+            rb.AddTorque(avdiff * Mathf.Clamp(mag, 0, MaxAngularAcceleration * Time.deltaTime * (1f - stunned)), ForceMode.VelocityChange);
+
+            //YAW CODE.
+            //Visually tilts the hull left and right when turning those directions. Absolutely no effect on overall motion.
+            hull.localRotation = Quaternion.Euler(0f, ControlHorizontal * -1f * maxTilt, 0f);
         }
-        else
-        {
-            speeding = false;
-            if (audioSources[3].isPlaying)
-            {
-                audioSources[3].Stop();
-            }
-            if (!engineBoost.isStopped)
-            {
-                engineBoost.Stop();
-            }
-        }
-
-
-        //ACCELERATION CODE.
-        //To those familiar with vector math, accelaration simply follows the direction of (desired velocity minus current)
-        //and is capped at a magnitude of MaxAcceleration.
-        //So, acceleration can be in any direction and is not necessarily forward as the engine flames might imply.
-        //For example, when turning right, acceleration is purely to the right (centripetal acceleration - nothing to do with the ship rotating, which is in the next code group)
-        Vector3 vDiff = transform.up * actualSpeed * ControlThrust - rb.velocity; //Difference between current velocity and intended velocity.
-        if (vDiff.magnitude > MaxAcceleration * (1f - stunned))
-            vDiff *= MaxAcceleration * (1f - stunned) / vDiff.magnitude;
-        rb.AddForce(vDiff, ForceMode.VelocityChange);
-
-        //TURNING CODE.
-        //Note on the math here: Turn speed (target/intended angular velocity) is "TurnFactor" radians per second.
-        //The code below calculates the needed angular acceleration needed to reach that turning speed, then applies
-        //angular acceleration in that direction, capped at max angular acceleration.
-        //Generally, max angular acceleration is more than sufficient to reach the desired turn speed instantly, so TurnFactor is the limiting factor.
-        //MaxAngularAcceleration is, however, the limiting factor in spinout correction, especially when working at reduced power due to stun.
-        Vector3 avdiff = -1 * (TurnFactor * (transform.forward * ControlHorizontal + transform.right * ControlVertical) + rb.angularVelocity); //Difference between current angular velocity and intended.
-        float mag = avdiff.magnitude;
-        avdiff.Normalize(); //avdiff is now avDIRECTION. Magnitude is 1.
-        rb.AddTorque(avdiff * Mathf.Clamp(mag, 0, MaxAngularAcceleration * Time.deltaTime * (1f - stunned)), ForceMode.VelocityChange);
-
-        //YAW CODE.
-        //Visually tilts the hull left and right when turning those directions. Absolutely no effect on overall motion.
-        hull.localRotation = Quaternion.Euler(0f, ControlHorizontal * -1f * maxTilt, 0f);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -12,7 +12,6 @@ public class Asteroid : MonoBehaviour
     Vector3 rotationSpeed;
     Transform badShip;
     Transform player;
-    AudioSource[] audioSources;
     public enum AsteroidClass { BIG, MEDIUM, SMALL }
     [SerializeField]
     AsteroidClass asteroidClass;
@@ -23,7 +22,6 @@ public class Asteroid : MonoBehaviour
 
     void Start()
     {
-        audioSources = GetComponents<AudioSource>();
         GameObject tempPlayer = GameObject.FindGameObjectWithTag("Player");
         if (tempPlayer != null)
         {
@@ -40,24 +38,27 @@ public class Asteroid : MonoBehaviour
 
     void LateUpdate()
     {
-        if (badShip != null)
+        if (Time.timeScale > 0)
         {
-            Vector3 directionToBadShip = badShip.transform.position - transform.position;
-            if (directionToBadShip.magnitude < 150)
+            if (badShip != null)
             {
-                direction -= directionToBadShip.normalized * 0.02f;
+                Vector3 directionToBadShip = badShip.transform.position - transform.position;
+                if (directionToBadShip.magnitude < 150)
+                {
+                    direction -= directionToBadShip.normalized * 0.02f;
+                }
             }
-        }
 
-        if (player != null)
-        {
-            Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-            direction += directionToPlayer * 0.01f;
-        }
-        direction.Normalize();
-        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+            if (player != null)
+            {
+                Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+                direction += directionToPlayer * 0.01f;
+            }
+            direction.Normalize();
+            transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
-        transform.Rotate(rotationSpeed);
+            transform.Rotate(rotationSpeed);
+        }
     }
 
     public void Explode()
