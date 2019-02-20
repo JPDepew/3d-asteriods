@@ -10725,7 +10725,6 @@ GameObject:
   - component: {fileID: 124701562971489310}
   - component: {fileID: 81489197033164652}
   - component: {fileID: 114202955404465944}
-  - component: {fileID: 1513398813164957773}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -10820,19 +10819,6 @@ MonoBehaviour:
   FogActive: 0
   FogOverridesSkybox: 0
   FogColor: {r: 1, g: 0.4669811, b: 0.4669811, a: 0.5}
---- !u!114 &1513398813164957773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1519333514888632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profile: {fileID: 11400000, guid: a51a2409325580a40b14b560a2257d8a, type: 2}
 --- !u!1 &1586778132102190
 GameObject:
   m_ObjectHideFlags: 0
@@ -30203,15 +30189,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 111bc000ac248ee4996e6c91b02c2f97, type: 3}
---- !u!4 &8015962234491635785 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 753146324788655140, guid: 111bc000ac248ee4996e6c91b02c2f97,
-    type: 3}
-  m_PrefabInstance: {fileID: 7299734358199975021}
-  m_PrefabAsset: {fileID: 0}
 --- !u!198 &8955767657621732645 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 1802735647887229256, guid: 111bc000ac248ee4996e6c91b02c2f97,
+    type: 3}
+  m_PrefabInstance: {fileID: 7299734358199975021}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8015962234491635785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 753146324788655140, guid: 111bc000ac248ee4996e6c91b02c2f97,
     type: 3}
   m_PrefabInstance: {fileID: 7299734358199975021}
   m_PrefabAsset: {fileID: 0}
