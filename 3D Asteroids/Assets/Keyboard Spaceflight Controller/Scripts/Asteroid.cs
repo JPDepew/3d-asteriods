@@ -7,7 +7,7 @@ public class Asteroid : MonoBehaviour
     public Vector3 direction;
     public float speed = 15;
     public GameObject explosion;
-    public GameObject[] otherAsteroids;
+    public GameObject otherAsteroid;
 
     Vector3 rotationSpeed;
     Transform badShip;
@@ -66,26 +66,20 @@ public class Asteroid : MonoBehaviour
         if (!destroyed)
         {
             destroyed = true;
-            int index = 0;
             float speedToApply = 40;
 
             // This is to keep track of the # of asteroids in a scene
             onAsteroidExplode?.Invoke(asteroidClass);
-            if (asteroidClass == AsteroidClass.BIG)
-            {
-                index = Random.Range(2, 4);
-            }
-            else if (asteroidClass == AsteroidClass.MEDIUM)
+            if (asteroidClass == AsteroidClass.MEDIUM)
             {
                 speedToApply = 60;
-                index = Random.Range(0, 2);
             }
             if (asteroidClass != AsteroidClass.SMALL)
             {
-                Asteroid tempAsteroid1 = Instantiate(otherAsteroids[index], transform.position, transform.rotation).GetComponent<Asteroid>();
+                Asteroid tempAsteroid1 = Instantiate(otherAsteroid, transform.position, transform.rotation).GetComponent<Asteroid>();
                 tempAsteroid1.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
                 tempAsteroid1.speed = speedToApply;
-                Asteroid tempAsteroid2 = Instantiate(otherAsteroids[index], transform.position, transform.rotation).GetComponent<Asteroid>();
+                Asteroid tempAsteroid2 = Instantiate(otherAsteroid, transform.position, transform.rotation).GetComponent<Asteroid>();
                 tempAsteroid2.direction = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f));
                 tempAsteroid2.speed = speedToApply;
             }
